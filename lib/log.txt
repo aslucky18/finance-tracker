@@ -9,6 +9,11 @@
 # 5. [INFO] Started to work on sort functionality
 # 6. [INFO] Added swipe to delete functionality
 # 7. [INFO] Added time stamp inside of transcation tile
-
-
-# . [INFO] Application closed
+# 8. [FIXED] Modified timestamp and tested manually
+# 9. [ERROR] Issues on Dissmissable
+# 10. [INFO] Replacing Dissmissable with swipe actions
+# 11. [FIXED] On using swipe_to_action: ^0.3.0 solved the swipe action Issues
+# 12. [INFO] End of the LOG
+# 13. [INFO] APP Released to device 
+# 14. [GITHUB] UPDATED TO GITHUB.COM
+# 14. [INFO] Application closed

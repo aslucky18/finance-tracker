@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
@@ -222,8 +221,8 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
       return;
     }
 
-    final DateTime now = DateTime.now();
-    final String formattedDate = DateFormat('yyyyMMddHHmmss').format(now);
+    final String formattedDate = DateTime.now().toString();
+
     _transactionID = "TXN-$formattedDate";
 
     final transactionData = {

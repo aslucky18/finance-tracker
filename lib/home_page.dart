@@ -1,6 +1,8 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:ftracker/view_transaction_tile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:swipe_to_action/swipe_to_action.dart';
 import 'dart:convert';
 import 'add_transaction_page.dart';
 import 'constants.dart';
@@ -509,15 +511,27 @@ class _HomePageState extends State<HomePage> {
   // Build the transaction tile widget
   Widget _buildTransactionTile(
       BuildContext context, Map<String, dynamic> transaction) {
-    return Dismissible(
+    return Swipeable(
       key: Key(transaction['transactionID']),
-      direction: DismissDirection.endToStart,
-      onDismissed: (direction) {
-        _showDeleteConfirmationDialog(transaction['transactionID']);
+      direction: SwipeDirection.endToStart,
+      onSwipe: (direction) {
+        if (direction == SwipeDirection.endToStart) {
+          // do something
+          _showDeleteConfirmationDialog(transaction['transactionID']);
+        } else {
+          // do something else
+        }
       },
       background: Container(
-        color: Colors.red,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(10),
+            bottomRight: Radius.circular(10),
+          ),
+        ),
+        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.all(10),
         alignment: AlignmentDirectional.centerEnd,
         child: const Icon(Icons.delete, color: Colors.white),
       ),
@@ -572,7 +586,8 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 Text(
-                  "${DateTime.parse(transaction['timestamp']).toLocal().day.toString().padLeft(2, '0')}-${DateTime.parse(transaction['timestamp']).toLocal().month.toString().padLeft(2, '0')}-${DateTime.parse(transaction['timestamp']).toLocal().year}",
+                  DateFormat('dd-MM-yyyy')
+                      .format(DateTime.parse(transaction['timestamp'])),
                   style: const TextStyle(color: Colors.white, fontSize: 18),
                 ),
               ],

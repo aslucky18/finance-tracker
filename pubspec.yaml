@@ -37,6 +37,7 @@ dependencies:
   intl: ^0.20.1
   shared_preferences: ^2.3.5
   faker: ^2.2.0
+  swipe_to_action: ^0.3.0
 
 dev_dependencies:
   flutter_test:
