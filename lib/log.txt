@@ -1,0 +1,14 @@
+# Log Report
+# Date: 2025-02-06
+
+# Log Entries:
+# 1. [INFO] Application started
+# 2. [INFO] User logged in
+# 3. [ERROR] Failed to load cash data 
+# 4. [FIXED] Cash option is fixed
+# 5. [INFO] Started to work on sort functionality
+# 6. [INFO] Added swipe to delete functionality
+# 7. [INFO] Added time stamp inside of transcation tile
+
+
+# . [INFO] Application closed

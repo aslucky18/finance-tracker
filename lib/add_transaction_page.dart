@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-
 class AddTransactionPage extends StatefulWidget {
   const AddTransactionPage({super.key});
 
@@ -14,6 +13,27 @@ class AddTransactionPage extends StatefulWidget {
 class _AddTransactionPageState extends State<AddTransactionPage> {
   final List<String> _transactionTypes = ["Credit", "Debit"];
   final List<String> _accountTypes = ["Cash", "Bank", "Credit Card"];
+  final List<String> _utilityTypes = [
+    "Transportation",
+    "Food & Beverages",
+    "Regular Services",
+    "Daily Essentials"
+  ];
+  final Map<String, List<String>> _utilityCategories = {
+    "Transportation": ["Fuel/Gas", "Public transport fares", "Parking fees"],
+    "Food & Beverages": ["Groceries", "Coffee/Tea", "Lunch expenses"],
+    "Regular Services": [
+      "Mobile recharges",
+      "Internet data packs",
+      "Subscription services"
+    ],
+    "Daily Essentials": [
+      "Personal care items",
+      "Household supplies",
+      "Medicine/Healthcare items"
+    ],
+  };
+
   final Map<String, String> _accountSelections = {
     "Cash": "",
     "Credit Card": "1099",
@@ -23,9 +43,12 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
   String? _selectedTransactionType;
   String? _selectedAccountType;
   String? _selectedAccount;
+  String? _selectedUtilityType;
+  String? _selectedUtilityCategory;
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _bankMessageController = TextEditingController();
-  final TextEditingController _notesController = TextEditingController();
+  final TextEditingController _notesController =
+      TextEditingController(text: "No Notes");
   String _transactionID = "";
 
   @override
@@ -53,7 +76,8 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                   label: "Transaction Type",
                   items: _transactionTypes,
                   value: _selectedTransactionType,
-                  onChanged: (value) => setState(() => _selectedTransactionType = value),
+                  onChanged: (value) =>
+                      setState(() => _selectedTransactionType = value),
                 ),
                 const SizedBox(height: 15),
                 _buildDropdownField(
@@ -71,7 +95,27 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                     label: "Account",
                     items: _getFilteredAccounts(),
                     value: _selectedAccount,
-                    onChanged: (value) => setState(() => _selectedAccount = value),
+                    onChanged: (value) =>
+                        setState(() => _selectedAccount = value),
+                  ),
+                const SizedBox(height: 15),
+                _buildDropdownField(
+                  label: "Utility Type",
+                  items: _utilityTypes,
+                  value: _selectedUtilityType,
+                  onChanged: (value) => setState(() {
+                    _selectedUtilityType = value;
+                    _selectedUtilityCategory = null; // Reset utility category
+                  }),
+                ),
+                const SizedBox(height: 15),
+                if (_selectedUtilityType != null)
+                  _buildDropdownField(
+                    label: "Utility Category",
+                    items: _utilityCategories[_selectedUtilityType] ?? [],
+                    value: _selectedUtilityCategory,
+                    onChanged: (value) =>
+                        setState(() => _selectedUtilityCategory = value),
                   ),
                 const SizedBox(height: 15),
                 _buildTextInputField(
@@ -162,6 +206,22 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
   }
 
   Future<void> _submitTransaction() async {
+    if (_selectedTransactionType == null ||
+        _selectedAccountType == null ||
+        _selectedAccount == null ||
+        _amountController.text.isEmpty ||
+        (_selectedAccountType != "Cash" &&
+            _bankMessageController.text.isEmpty) ||
+        _selectedUtilityType == null ||
+        _selectedUtilityCategory == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill in all required fields.'),
+        ),
+      );
+      return;
+    }
+
     final DateTime now = DateTime.now();
     final String formattedDate = DateFormat('yyyyMMddHHmmss').format(now);
     _transactionID = "TXN-$formattedDate";
@@ -171,6 +231,8 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
       'transactionType': _selectedTransactionType,
       'accountType': _selectedAccountType,
       'account': _selectedAccount,
+      'utilityType': _selectedUtilityType,
+      'utilityCategory': _selectedUtilityCategory,
       'amount': _amountController.text,
       'bankMessage': _bankMessageController.text,
       'notes': _notesController.text,
@@ -186,7 +248,9 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
     debugPrint('Transaction Data: $transactionData');
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Transaction ID: $_transactionID submitted successfully!')),
+      SnackBar(
+          content:
+              Text('Transaction ID: $_transactionID submitted successfully!')),
     );
 
     // Clear fields after submission
@@ -194,6 +258,8 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
       _selectedTransactionType = null;
       _selectedAccountType = null;
       _selectedAccount = null;
+      _selectedUtilityType = null;
+      _selectedUtilityCategory = null;
       _amountController.clear();
       _bankMessageController.clear();
       _notesController.clear();
