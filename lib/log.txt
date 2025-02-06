@@ -17,3 +17,6 @@
 # 13. [INFO] APP Released to device 
 # 14. [GITHUB] UPDATED TO GITHUB.COM
 # 14. [INFO] Application closed
+
+
+Check Notion - https://www.notion.so/Finance-Tracker-App-Tasks-efc32f47c44b448782876bc915749813?pvs=4
